@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import { drizzle } from "drizzle-orm/libsql";
-import "./App.css";
+import { useEffect, useState } from 'react';
+import viteLogo from '/vite.svg';
+import { drizzle } from 'drizzle-orm/libsql';
+import reactLogo from './assets/react.svg';
 
-import { createClient, ResultSet } from "@libsql/client";
-import { todoTable, userTable } from "./db/schema";
+import './App.css';
+import '@mantine/core/styles.css';
+
+import { createClient, ResultSet } from '@libsql/client';
+import { MantineProvider } from '@mantine/core';
+import Header from './components/header/header';
+import { todoTable, userTable } from './db/schema';
 
 const tursoDatabaseUrl = import.meta.env.VITE_TURSO_DATABASE_URL;
 const tursoAuthToken = import.meta.env.VITE_TURSO_AUTH_TOKEN;
 if (!tursoDatabaseUrl || !tursoAuthToken) {
-  throw new Error("Missing values in .env file!");
+  throw new Error('Missing values in .env file!');
 }
 
 const turso = createClient({
@@ -43,7 +47,8 @@ function App() {
   }, []);
 
   return (
-    <>
+    <MantineProvider>
+      <Header />
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -54,9 +59,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
         {result.length && (
           <ul>
             {result.map((x) => (
@@ -71,10 +74,8 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+    </MantineProvider>
   );
 }
 
