@@ -1,41 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import viteLogo from '/vite.svg';
+// import viteLogo from '/vite.svg';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import { drizzle } from 'drizzle-orm/libsql';
-import reactLogo from './assets/react.svg';
+// import { createClient, ResultSet } from '@libsql/client';
+// import TextField from '@mui/material/TextField';
+// import { drizzle } from 'drizzle-orm/libsql';
+import { useAppConfigurationStore } from './app-configuration.store';
+// import reactLogo from './assets/react.svg';
+// import Header from './components/header/header';
+import SettingsPage from './components/pages/settings.page';
 
-import '@mantine/core/styles.css';
-import './App.css';
+// import { todoTable, userTable } from './db/schema';
 
-import { createClient, ResultSet } from '@libsql/client';
-import TextField from '@mui/material/TextField';
-import Header from './components/header/header';
-import { todoTable, userTable } from './db/schema';
+// const turso = createClient({
+//   url: tursoDatabaseUrl,
+//   authToken: tursoAuthToken,
+// });
 
-const tursoDatabaseUrl = import.meta.env.VITE_TURSO_DATABASE_URL;
-const tursoAuthToken = import.meta.env.VITE_TURSO_AUTH_TOKEN;
-if (!tursoDatabaseUrl || !tursoAuthToken) {
-  throw new Error('Missing values in .env file!');
-}
-
-const turso = createClient({
-  url: tursoDatabaseUrl,
-  authToken: tursoAuthToken,
-});
-
-const db = drizzle(turso);
+// const db = drizzle(turso);
 
 let fetched = false;
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [result, setResult] = useState<any[]>([]);
+  // const { hasAllConfiguration } = useAppConfiguration();
+  const appInitialized = useAppConfigurationStore((s) => s.appInitialized);
 
   useEffect(() => {
     if (fetched) {
@@ -44,39 +37,26 @@ function App() {
 
     const fetchData = async () => {
       // const results = await turso.execute("SELECT * FROM todos");
-      const results = await db.select().from(todoTable).all();
+      // const results = await db.select().from(todoTable).all();
       // const results = await db.select().from(userTable).all();
-      setResult(results);
+      // setResult(results);
       fetched = true;
     };
 
     fetchData();
   }, []);
 
+  if (!appInitialized) {
+    // if (hasAllConfiguration) {
+    return <SettingsPage />;
+  }
+
   return (
     <>
       <CssBaseline />
 
-      <TextField
-        error
-        id="outlined-error-helper-text"
-        label="Error"
-        defaultValue="Hello World"
-        helperText="Incorrect entry."
-      />
-      <Header />
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        {result.length && (
+        {/* {result.length && (
           <ul>
             {result.map((x) => (
               <li key={x.order}>
@@ -85,7 +65,7 @@ function App() {
             ))}
           </ul>
         )}
-        <p>{JSON.stringify(result)}</p>
+        <p>{JSON.stringify(result)}</p> */}
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
