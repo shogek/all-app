@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 import viteLogo from '/vite.svg';
+
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import { drizzle } from 'drizzle-orm/libsql';
 import reactLogo from './assets/react.svg';
 
-import './App.css';
 import '@mantine/core/styles.css';
+import './App.css';
 
 import { createClient, ResultSet } from '@libsql/client';
-import { MantineProvider } from '@mantine/core';
+import TextField from '@mui/material/TextField';
 import Header from './components/header/header';
 import { todoTable, userTable } from './db/schema';
 
@@ -47,7 +54,16 @@ function App() {
   }, []);
 
   return (
-    <MantineProvider>
+    <>
+      <CssBaseline />
+
+      <TextField
+        error
+        id="outlined-error-helper-text"
+        label="Error"
+        defaultValue="Hello World"
+        helperText="Incorrect entry."
+      />
       <Header />
       <div>
         <a href="https://vitejs.dev" target="_blank">
@@ -75,7 +91,7 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </MantineProvider>
+    </>
   );
 }
 
