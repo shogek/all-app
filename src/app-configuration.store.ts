@@ -1,43 +1,48 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
 function getTursoDatabaseUrl() {
-  return import.meta.env.VITE_TURSO_DATABASE_URL ?? globalThis.localStorage.getItem('ALL-APP:tursoDatabaseUrl');
+  return import.meta.env.VITE_TURSO_DATABASE_URL ?? globalThis.localStorage.getItem('ALL-APP:tursoDatabaseUrl')
 }
 
 function getTursoAuthToken() {
-  return import.meta.env.VITE_TURSO_AUTH_TOKEN ?? globalThis.localStorage.getItem('ALL-APP:tursoAuthToken');
+  return import.meta.env.VITE_TURSO_AUTH_TOKEN ?? globalThis.localStorage.getItem('ALL-APP:tursoAuthToken')
 }
 
-const initialDatabaseUrl = getTursoDatabaseUrl();
-const initialAuthToken = getTursoAuthToken();
+const initialDatabaseUrl = getTursoDatabaseUrl()
+const initialAuthToken = getTursoAuthToken()
+
+type ReadyConfiguration = {
+  tursoDatabaseUrl: string
+  tursoAuthToken: string
+}
 
 type AppConfigurationState = {
-  appInitialized: boolean;
-  tursoDatabaseUrl: string | null;
-  tursoAuthToken: string | null;
-  setTursoDatabaseUrl: (databaseUrl: string) => void;
-  setTursoAuthToken: (authToken: string) => void;
-};
+  isAppReady: boolean
+  configuration: {
+    tursoDatabaseUrl: string | null
+    tursoAuthToken: string | null
+  }
+  setConfiguration: (config: ReadyConfiguration) => void
+}
 
 export const useAppConfigurationStore = create<AppConfigurationState>((set) => ({
-  appInitialized: !!initialDatabaseUrl && !!initialAuthToken,
-  tursoDatabaseUrl: initialDatabaseUrl,
-  tursoAuthToken: initialAuthToken,
-  // TODO (Benas): Simplify this nonsense
-  setTursoDatabaseUrl: (databaseUrl: string) =>
+  isAppReady: !!initialDatabaseUrl && !!initialAuthToken,
+  configuration: {
+    tursoDatabaseUrl: initialDatabaseUrl,
+    tursoAuthToken: initialAuthToken,
+  },
+  setConfiguration: (config: ReadyConfiguration) =>
     set((state) => {
-      globalThis.localStorage.setItem('ALL-APP:tursoDatabaseUrl', databaseUrl);
+      globalThis.localStorage.setItem('ALL-APP:tursoDatabaseUrl', config.tursoDatabaseUrl)
+      globalThis.localStorage.setItem('ALL-APP:tursoAuthToken', config.tursoAuthToken)
 
       return {
         ...state,
-        tursoDatabaseUrl: databaseUrl,
-        appInitialized: !!databaseUrl && !!state.tursoAuthToken,
-      };
+        isAppReady: true,
+        configuration: {
+          tursoDatabaseUrl: config.tursoDatabaseUrl,
+          tursoAuthToken: config.tursoAuthToken,
+        },
+      }
     }),
-  setTursoAuthToken: (authToken: string) =>
-    set((state) => {
-      globalThis.localStorage.setItem('ALL-APP:tursoAuthToken', authToken);
-
-      return { ...state, tursoAuthToken: authToken, appInitialized: !!authToken && !!state.tursoDatabaseUrl };
-    }),
-}));
+}))
