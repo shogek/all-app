@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 
 function getTursoDatabaseUrl() {
-  return import.meta.env.VITE_TURSO_DATABASE_URL ?? globalThis.localStorage.getItem('ALL-APP:tursoDatabaseUrl')
+  return globalThis.localStorage.getItem('ALL-APP:tursoDatabaseUrl')
 }
 
 function getTursoAuthToken() {
-  return import.meta.env.VITE_TURSO_AUTH_TOKEN ?? globalThis.localStorage.getItem('ALL-APP:tursoAuthToken')
+  return globalThis.localStorage.getItem('ALL-APP:tursoAuthToken')
 }
 
 const initialDatabaseUrl = getTursoDatabaseUrl()
