@@ -25,7 +25,7 @@ function HomePage() {
 
   return (
     <div className={s.wrapper}>
-      <h1 className={s.title}>Home</h1>
+      <h1 className={s.title}>Home v2</h1>
       <p>{JSON.stringify(results)}</p>
     </div>
   )
