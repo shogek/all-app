@@ -1,5 +1,5 @@
-import s from './error-page.module.scss'
 import { useRouteError } from 'react-router-dom'
+import * as S from './error-page.styles'
 
 export default function ErrorPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -7,14 +7,14 @@ export default function ErrorPage() {
   console.error(error)
 
   return (
-    <div className={s.wrapper}>
-      <div className={s.content}>
+    <S.Wrapper>
+      <S.Content>
         <h1>Oops!</h1>
         <p>Sorry, an unexpected error has occurred.</p>
         <p>
           <i>{error.statusText || error.message}</i>
         </p>
-      </div>
-    </div>
+      </S.Content>
+    </S.Wrapper>
   )
 }

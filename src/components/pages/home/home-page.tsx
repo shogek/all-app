@@ -1,24 +1,25 @@
 import { memo } from 'react'
-import s from './home.page.module.scss'
+import Typography from '@mui/material/Typography'
 import { Link } from 'react-router-dom'
 import useChecklistNotes from '../../shared/hooks/use-checklist-notes.hook'
+import * as S from './home-page.styles'
 
 function HomePage() {
   const { data, isLoading } = useChecklistNotes()
 
   return (
-    <div className={s.wrapper}>
-      <h1 className={s.title}>Home v2</h1>
+    <S.Wrapper>
+      <Typography variant="h4">Home</Typography>
 
       {isLoading && <span>Fetching checklist notes...</span>}
 
       {!isLoading &&
         (data ?? []).map((x) => (
           <Link key={x.id} to={`checklist-note/${x.id}`}>
-            ({x.id}) {x.title}
+            {x.title}
           </Link>
         ))}
-    </div>
+    </S.Wrapper>
   )
 }
 

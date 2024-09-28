@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 import { useAppConfigurationStore } from './app-configuration.store'
-import SettingsPage from './components/pages/settings/settings.page'
+import SettingsPage from './components/pages/settings/settings-page'
 import { router } from './router'
 
 const queryClient = new QueryClient()

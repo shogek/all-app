@@ -1,9 +1,10 @@
 import { memo, useState } from 'react'
-import s from './settings.page.module.scss'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { useShallow } from 'zustand/shallow'
 import { useAppConfigurationStore } from '../../../app-configuration.store'
+import * as S from './settings-page.styles'
 
 function SettingsPage() {
   const { configuration, setConfiguration } = useAppConfigurationStore(
@@ -24,8 +25,10 @@ function SettingsPage() {
   }
 
   return (
-    <div className={s.wrapper}>
-      <h1 className={s.title}>Settings</h1>
+    <S.Wrapper>
+      <Typography variant="h4" sx={{ marginBottom: '16px' }}>
+        Settings
+      </Typography>
 
       {/* TODO: Add min length validation */}
       <TextField
@@ -44,12 +47,12 @@ function SettingsPage() {
         onChange={(e) => setAuthToken(e.target.value)}
       />
 
-      <div className={s.buttonWrapper}>
+      <S.ButtonWrapper>
         <Button variant="contained" onClick={handleClickSave}>
           Save
         </Button>
-      </div>
-    </div>
+      </S.ButtonWrapper>
+    </S.Wrapper>
   )
 }
 
