@@ -6,7 +6,7 @@ const config = {
   trailingComma: 'es5',
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
   importOrder: [
-    '.*styles.css$',
+    '.*styles.s?css$',
     '',
     'dayjs',
     '^react$',
@@ -16,9 +16,9 @@ const config = {
     '<THIRD_PARTY_MODULES>',
     '^@docs/(.*)$',
     '^@/.*$',
-    '^../(?!.*.css$).*$',
-    '^./(?!.*.css$).*$',
-    '\\.css$',
+    '^../(?!.*.s?css$).*$',
+    '^./(?!.*.s?css$).*$',
+    '\\.s?css$',
   ],
   overrides: [
     {
@@ -28,6 +28,6 @@ const config = {
       },
     },
   ],
-};
+}
 
-export default config;
+export default config
