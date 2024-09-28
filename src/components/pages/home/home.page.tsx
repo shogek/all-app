@@ -1,35 +1,23 @@
-import { memo, useEffect, useState } from 'react'
+import { memo } from 'react'
 import s from './home.page.module.scss'
-import { ChecklistNote, checklistNotes } from '../../../db/schema/checklist-notes'
-import { useDatabase } from '../../../use-database.hook'
-import TodoList from '../../features/todo-list/todo-list'
-
-let fetched = false
+import { Link } from 'react-router-dom'
+import useChecklistNotes from '../../shared/hooks/use-checklist-notes.hook'
 
 function HomePage() {
-  const database = useDatabase()
-  const [results, setResults] = useState<ChecklistNote[]>([])
-
-  useEffect(() => {
-    if (fetched) {
-      return
-    }
-
-    const fetchData = async () => {
-      const results = await database.select().from(checklistNotes).all()
-      setResults(results)
-      fetched = true
-    }
-
-    fetchData()
-  }, [])
+  const { data, isLoading } = useChecklistNotes()
 
   return (
     <div className={s.wrapper}>
       <h1 className={s.title}>Home v2</h1>
-      {results.map((x) => (
-        <TodoList {...x} />
-      ))}
+
+      {isLoading && <span>Fetching checklist notes...</span>}
+
+      {!isLoading &&
+        (data ?? []).map((x) => (
+          <Link key={x.id} to={`checklist-note/${x.id}`}>
+            ({x.id}) {x.title}
+          </Link>
+        ))}
     </div>
   )
 }

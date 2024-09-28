@@ -7,8 +7,10 @@ type TodoListProps = ChecklistNote
 function TodoList(props: TodoListProps) {
   return (
     <div className={s.wrapper}>
-      <h2>{props.title}</h2>
-      <p>{props.json}</p>
+      <div className={s.content}>
+        <h2>{props.title}</h2>
+        <p>{props.json}</p>
+      </div>
     </div>
   )
 }
