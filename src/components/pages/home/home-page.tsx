@@ -1,11 +1,11 @@
 import { memo } from 'react'
 import Typography from '@mui/material/Typography'
-import { Link } from 'react-router-dom'
+import ChecklistNoteOverview from '../../features/checklist-note-overview/checklist-note-overview'
 import useChecklistNotes from '../../shared/hooks/use-checklist-notes.hook'
 import * as S from './home-page.styles'
 
 function HomePage() {
-  const { data, isLoading } = useChecklistNotes()
+  const { data: checklistNotes, isLoading } = useChecklistNotes()
 
   return (
     <S.Wrapper>
@@ -13,12 +13,7 @@ function HomePage() {
 
       {isLoading && <span>Fetching checklist notes...</span>}
 
-      {!isLoading &&
-        (data ?? []).map((x) => (
-          <Link key={x.id} to={`checklist-note/${x.id}`}>
-            {x.title}
-          </Link>
-        ))}
+      {!isLoading && (checklistNotes ?? []).map((checklistNote) => <ChecklistNoteOverview {...checklistNote} />)}
     </S.Wrapper>
   )
 }

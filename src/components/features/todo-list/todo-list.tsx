@@ -5,16 +5,9 @@ import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
-import type { ChecklistNote } from '../../../db/schema/checklist-notes'
+import type { ChecklistItem, ChecklistNote } from '../../../db/schema/checklist-notes'
 import useUpdateChecklistNote from '../../shared/hooks/use-update-checklist-note.hook'
 import * as S from './todo-list.styles'
-
-type Checklist = {
-  id: number
-  order: number
-  isChecked: boolean
-  text: string
-}
 
 type TodoListProps = ChecklistNote
 
@@ -23,14 +16,14 @@ type TodoListProps = ChecklistNote
 function TodoList(props: TodoListProps) {
   const navigate = useNavigate()
   const { isPending, mutateAsync: updateChecklistNote } = useUpdateChecklistNote()
-  const [items, setItems] = useState<Checklist[]>(JSON.parse(props.json ?? ''))
+  const [items, setItems] = useState<ChecklistItem[]>(JSON.parse(props.json ?? ''))
 
   const handleSaveChanges = async () => {
     await updateChecklistNote({ ...props, json: JSON.stringify(items) })
     navigate(-1)
   }
 
-  const handleChangeChecked = (changedItem: Checklist) => {
+  const handleChangeChecked = (changedItem: ChecklistItem) => {
     const updatedItems = items.map((item) => {
       if (item.id !== changedItem.id) {
         return item
@@ -42,7 +35,7 @@ function TodoList(props: TodoListProps) {
     setItems(updatedItems)
   }
 
-  const handleChangeText = (changedItem: Checklist, changedText: string) => {
+  const handleChangeText = (changedItem: ChecklistItem, changedText: string) => {
     const updatedItems = items.map((item) => {
       if (item.id !== changedItem.id) {
         return item
@@ -61,7 +54,7 @@ function TodoList(props: TodoListProps) {
     const orders = items.length ? items.map((x) => x.order) : [0]
     const newOrder = Math.max(...orders) + 1
 
-    const newItem: Checklist = {
+    const newItem: ChecklistItem = {
       id: newId,
       order: newOrder,
       isChecked: false,
