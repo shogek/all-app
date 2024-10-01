@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import TodoList from '../../features/todo-list/todo-list'
+import ChecklistNoteDetails from '../../features/checklist-note-details/checklist-note-details'
 import useChecklistNote from '../../shared/hooks/use-checklist-note.hook'
 
 export default function ChecklistNotePage() {
@@ -15,5 +15,5 @@ export default function ChecklistNotePage() {
     throw new Error(`Checklist note with ID (${checklistNoteId}) not found!`)
   }
 
-  return <TodoList {...checklistNote} />
+  return <ChecklistNoteDetails {...checklistNote} />
 }
