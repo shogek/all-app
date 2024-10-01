@@ -14,7 +14,7 @@ export default function RootPage() {
             <HomeIcon />
           </IconButton>
 
-          <Typography variant="body1">Deployed @ 2024-10-01 22:10</Typography>
+          <Typography variant="body1">Deployed @ 2024-10-01 22:20</Typography>
         </Toolbar>
       </AppBar>
 

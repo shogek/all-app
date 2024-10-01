@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
 import Button from '@mui/material/Button'
@@ -11,14 +11,22 @@ import type { ChecklistItem, ChecklistNote } from '../../../db/schema/checklist-
 import useUpdateChecklistNote from '../../shared/hooks/use-update-checklist-note.hook'
 import * as S from './checklist-note-details.styles'
 
-type TodoListProps = ChecklistNote
+type ChecklistNoteDetailsProps = ChecklistNote
 
-// TODO: If no items in note, create new one and focus on it
-function ChecklistNoteDetails(props: TodoListProps) {
+function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
   const navigate = useNavigate()
   const { isPending, mutateAsync: updateChecklistNote } = useUpdateChecklistNote()
   const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>(JSON.parse(props.json ?? ''))
   const [focusedChecklistItemId, setFocusedChecklistItemId] = useState(-1)
+  /** Used for focusing on a newly created entry */
+  const [newlyAddedEntryId, setNewlyAddedEntryId] = useState(-1)
+
+  useEffect(() => {
+    if (newlyAddedEntryId !== -1) {
+      // We are assuming that React has focused on the input field
+      setNewlyAddedEntryId(-1)
+    }
+  }, [newlyAddedEntryId])
 
   const handleDeleteEntryClicked = (toDeleteId: number) => {
     const filtered = checklistItems.filter((x) => x.id !== toDeleteId)
@@ -72,6 +80,7 @@ function ChecklistNoteDetails(props: TodoListProps) {
       text: '',
     }
 
+    setNewlyAddedEntryId(newId)
     setChecklistItems([...checklistItems, newItem])
   }
 
@@ -88,9 +97,9 @@ function ChecklistNoteDetails(props: TodoListProps) {
               <Checkbox checked={checklistItem.isChecked} onChange={() => handleCheckChanged(checklistItem)} />
 
               <TextField
+                inputRef={(input) => input && checklistItem.id === newlyAddedEntryId && input.focus()}
                 multiline
                 fullWidth
-                id="standard-basic"
                 variant="standard"
                 value={checklistItem.text}
                 onFocus={() => handleEntryFocused(checklistItem)}
