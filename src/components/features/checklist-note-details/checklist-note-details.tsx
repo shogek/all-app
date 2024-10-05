@@ -1,6 +1,10 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import ClearIcon from '@mui/icons-material/Clear'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
@@ -20,6 +24,9 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
   const [focusedChecklistItemId, setFocusedChecklistItemId] = useState(-1)
   /** Used for focusing on a newly created entry */
   const [newlyAddedEntryId, setNewlyAddedEntryId] = useState(-1)
+
+  const tickedItems = useMemo(() => checklistItems.filter((x) => x.isChecked), [checklistItems])
+  const untickedItems = useMemo(() => checklistItems.filter((x) => !x.isChecked), [checklistItems])
 
   useEffect(() => {
     if (newlyAddedEntryId !== -1) {
@@ -92,24 +99,24 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
         </Typography>
 
         <S.Listing>
-          {checklistItems.map((checklistItem) => (
-            <S.ListingItem key={checklistItem.id}>
-              <Checkbox checked={checklistItem.isChecked} onChange={() => handleCheckChanged(checklistItem)} />
+          {untickedItems.map((untickedItem) => (
+            <S.ListingItem key={untickedItem.id}>
+              <Checkbox checked={untickedItem.isChecked} onChange={() => handleCheckChanged(untickedItem)} />
 
               <TextField
-                inputRef={(input) => input && checklistItem.id === newlyAddedEntryId && input.focus()}
+                inputRef={(input) => input && untickedItem.id === newlyAddedEntryId && input.focus()}
                 multiline
                 fullWidth
                 variant="standard"
-                value={checklistItem.text}
-                onFocus={() => handleEntryFocused(checklistItem)}
-                onChange={(e) => handleTextChanged(checklistItem, e.target.value)}
+                value={untickedItem.text}
+                onFocus={() => handleEntryFocused(untickedItem)}
+                onChange={(e) => handleTextChanged(untickedItem, e.target.value)}
               />
 
               <IconButton
-                disabled={checklistItem.id !== focusedChecklistItemId}
-                sx={{ visibility: checklistItem.id === focusedChecklistItemId ? 'initial' : 'hidden' }}
-                onClick={() => handleDeleteEntryClicked(checklistItem.id)}
+                disabled={untickedItem.id !== focusedChecklistItemId}
+                sx={{ visibility: untickedItem.id === focusedChecklistItemId ? 'initial' : 'hidden' }}
+                onClick={() => handleDeleteEntryClicked(untickedItem.id)}
               >
                 <ClearIcon />
               </IconButton>
@@ -121,6 +128,45 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
           <AddIcon />
           <Typography variant="body1">Add item</Typography>
         </S.ButtonIcon>
+
+        {tickedItems.length > 0 && (
+          <div style={{ marginTop: '16px' }}>
+            <Accordion defaultExpanded={untickedItems.length < 1}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+                {tickedItems.length > 1 ? `${tickedItems.length} ticked items` : `${tickedItems.length} ticked item`}
+              </AccordionSummary>
+
+              <AccordionDetails>
+                <ul>
+                  {tickedItems.map((tickedItem) => (
+                    <li style={{ display: 'flex', alignItems: 'center' }}>
+                      <Checkbox checked color="default" onChange={() => handleCheckChanged(tickedItem)} />
+
+                      {/* TODO: Change text color to gray */}
+                      <TextField
+                        sx={{ textDecoration: 'line-through' }}
+                        multiline
+                        fullWidth
+                        variant="standard"
+                        value={tickedItem.text}
+                        onFocus={() => handleEntryFocused(tickedItem)}
+                        onChange={(e) => handleTextChanged(tickedItem, e.target.value)}
+                      />
+
+                      <IconButton
+                        disabled={tickedItem.id !== focusedChecklistItemId}
+                        sx={{ visibility: tickedItem.id === focusedChecklistItemId ? 'initial' : 'hidden' }}
+                        onClick={() => handleDeleteEntryClicked(tickedItem.id)}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        )}
       </S.Content>
 
       <S.ActionsWrapper>
