@@ -1,4 +1,5 @@
 import { styled } from '@mui/material'
+import Accordion from '@mui/material/Accordion'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
@@ -30,4 +31,8 @@ export const ActionsWrapper = styled(Box)({
   marginTop: '16px',
   display: 'flex',
   justifyContent: 'flex-end',
+})
+
+export const AccordionWrapper = styled(Accordion)({
+  marginTop: '16px',
 })

@@ -130,16 +130,16 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
         </S.ButtonIcon>
 
         {tickedItems.length > 0 && (
-          <div style={{ marginTop: '16px' }}>
+          <S.AccordionWrapper>
             <Accordion defaultExpanded={untickedItems.length < 1}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tickedItems.length > 1 ? `${tickedItems.length} ticked items` : `${tickedItems.length} ticked item`}
               </AccordionSummary>
 
               <AccordionDetails>
-                <ul>
+                <S.Listing>
                   {tickedItems.map((tickedItem) => (
-                    <li style={{ display: 'flex', alignItems: 'center' }}>
+                    <S.ListingItem key={tickedItem.id}>
                       <Checkbox checked color="default" onChange={() => handleCheckChanged(tickedItem)} />
 
                       {/* TODO: Change text color to gray */}
@@ -160,12 +160,12 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
                       >
                         <ClearIcon />
                       </IconButton>
-                    </li>
+                    </S.ListingItem>
                   ))}
-                </ul>
+                </S.Listing>
               </AccordionDetails>
             </Accordion>
-          </div>
+          </S.AccordionWrapper>
         )}
       </S.Content>
 
