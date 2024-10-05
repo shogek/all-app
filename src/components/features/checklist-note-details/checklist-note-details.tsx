@@ -20,6 +20,7 @@ type ChecklistNoteDetailsProps = ChecklistNote
 function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
   const navigate = useNavigate()
   const { isPending, mutateAsync: updateChecklistNote } = useUpdateChecklistNote()
+  const [noteTitle, setNoteTitle] = useState(props.title)
   const [checklistItems, setChecklistItems] = useState<ChecklistItem[]>(JSON.parse(props.json ?? ''))
   const [focusedChecklistItemId, setFocusedChecklistItemId] = useState(-1)
   /** Used for focusing on a newly created entry */
@@ -45,7 +46,7 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
   }
 
   const handleSaveChangesClicked = async () => {
-    await updateChecklistNote({ ...props, json: JSON.stringify(checklistItems) })
+    await updateChecklistNote({ ...props, title: noteTitle, json: JSON.stringify(checklistItems) })
     navigate(-1)
   }
 
@@ -73,6 +74,10 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
     setChecklistItems(updatedItems)
   }
 
+  const handleTitleChanged = (newTitle: string) => {
+    setNoteTitle(newTitle)
+  }
+
   const handleAddNewItem = () => {
     const ids = checklistItems.length ? checklistItems.map((x) => x.id) : [0]
     const newId = Math.max(...ids) + 1
@@ -94,9 +99,14 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
   return (
     <S.Wrapper>
       <S.Content>
-        <Typography variant="h5" sx={{ marginLeft: '10px' }}>
-          {props.title}
-        </Typography>
+        {/* TODO: Create a custom textarea input that has no borders */}
+        <TextField
+          size="medium"
+          value={noteTitle}
+          variant="standard"
+          onChange={(e) => handleTitleChanged(e.target.value)}
+          fullWidth
+        />
 
         <S.Listing>
           {untickedItems.map((untickedItem) => (
@@ -131,7 +141,7 @@ function ChecklistNoteDetails(props: ChecklistNoteDetailsProps) {
 
         {tickedItems.length > 0 && (
           <S.AccordionWrapper>
-            <Accordion defaultExpanded={untickedItems.length < 1}>
+            <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {tickedItems.length > 1 ? `${tickedItems.length} ticked items` : `${tickedItems.length} ticked item`}
               </AccordionSummary>
